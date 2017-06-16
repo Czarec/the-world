@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace TheWorld.Models
 {
-    public class WorldContext : DbContext
+    public class WorldContext : IdentityDbContext<WorldUser>
     {
         private readonly IConfigurationRoot _config;
 
