@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using TheWorld.Models;
 using AutoMapper;
 using TheWorld.ViewModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace TheWorld
 {
@@ -46,7 +47,15 @@ namespace TheWorld
                 // TODO: real service
             }
 
-            services.AddDbContext<WorldContext>();
+            services.AddIdentity<WorldUser, IdentityRole>(config =>
+            {
+                config.User.RequireUniqueEmail = true;
+                config.Password.RequiredLength = 8;
+                config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+            }).AddEntityFrameworkStores<WorldContext>();
+
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<WorldContext>();
             services.AddScoped<IWorldRepository, WorldRepository>();
             services.AddTransient<GeoCoordsService>();
             services.AddTransient<WorldContextSeedData>();
@@ -75,6 +84,8 @@ namespace TheWorld
             }
 
             app.UseStaticFiles();
+
+            app.UseIdentity();
 
             app.UseMvc(config =>
             {
